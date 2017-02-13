@@ -336,8 +336,8 @@ plot.treeda <- function(obj, type = c("both", "variables", "samples"), axes = c(
 #' Given a fitted treeda model, get the predicted classes and
 #' projections onto the discriminating axes for new data.
 #'
-#' @param treeda
-#' @param newdata
+#' @param treeda Output from treeda function
+#' @param newdata New data
 #' @return A list containing the projections of the new data onto the
 #' discriminating axes, the predicted classes, and the rss (if the
 #' ground truth for the responses is available).

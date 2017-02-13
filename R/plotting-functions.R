@@ -120,7 +120,12 @@ combine_plot_and_tree = function(plot, tree.plot, tree.height = 5) {
 #' @export
 
 get_leaf_position = function(tree, ladderize) {
-    
+    tree.layout = tree_layout(tree, ladderize = ladderize)
+    dt = tree.layout$edgeDT
+    dt.sub = subset(dt, !is.na(dt$OTU))
+    out = data.frame(OTU = dt.sub$OTU, otu.pos = dt.sub$y)
+    rownames(out) = out$OTU
+    return(out)
 }
 
 

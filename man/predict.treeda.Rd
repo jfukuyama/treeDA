@@ -7,6 +7,11 @@
 \method{predict}{treeda}(treeda, newdata, newresponse = NULL,
   check.consist = TRUE)
 }
+\arguments{
+\item{treeda}{Output from treeda function}
+
+\item{newdata}{New data}
+}
 \value{
 A list containing the projections of the new data onto the
 discriminating axes, the predicted classes, and the rss (if the
