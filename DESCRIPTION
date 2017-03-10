@@ -1,10 +1,20 @@
 Package: treeDA
-Title: What the Package Does (one line, title case)
+Title: Tree-Based Discriminant Analysis
 Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Authors@R: person("Julia", "Fukuyama", email = "julia.fukuyama@gmail.com",
+    role = c("aut", "cre"))
+Description: Performs sparse LDA on a combination of node and leaf predictors
+    when the predictor variables are structured according to a tree.
 Depends:
     R (>= 3.3.0)
+Imports:
+    sparseLDA,
+    Matrix,
+    ggplot2,
+    mvtnorm,
+    reshape2,
+    gtable,
+    grid
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
