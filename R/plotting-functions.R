@@ -1,12 +1,9 @@
-
-
 #' Expand the background of a gtable.
 #'
 #' @param gtable A gtable object whose background needs to be expanded
 #' to fill the whole space.
 #'
 #' @return A gtable object with a bigger background.
-
 expand_background = function(gtable) {
     idx = which(gtable$layout[,"name"] == "background")
     if(length(idx) > 1) {
@@ -24,10 +21,6 @@ expand_background = function(gtable) {
     return(gtable)
 }
 
-
-
-
-
 #' Method for combining two ggplots
 #'
 #' This method takes a ggplot of some data along the tips of the trees
@@ -38,10 +31,13 @@ expand_background = function(gtable) {
 #'
 #' @param plot A plot of data about the OTUs with the x axis
 #' corresponding to OTUs.
-#' @param treePlot A plot of the tree.
-#' @param treeHeight The relative amount of space in the plot the tree
+#' @param tree.plot A plot of the tree.
+#' @param tree.height The relative amount of space in the plot the tree
 #' should take up.
-#' @return Prints the combined plot, returns a gtable object. 
+#' @param print If true, the function will print the combined plot to
+#' a graphics device, otherwise it will just return the gtable object
+#' without printing.
+#' @return Returns a gtable object. 
 #'
 #' @importFrom ggplot2 ggplotGrob
 #' @importFrom gtable gtable_add_rows
@@ -49,7 +45,7 @@ expand_background = function(gtable) {
 #' @importFrom gtable gtable_add_grob
 #' @importFrom grid unit
 #' @export
-combine_plot_and_tree = function(plot, tree.plot, tree.height = 5) {
+combine_plot_and_tree = function(plot, tree.plot, tree.height = 5, print = TRUE) {
     plot.grob = ggplotGrob(plot)
     tree.grob = ggplotGrob(tree.plot)
     tree.guide.idx = which(tree.grob$layout[,"name"] == "guide-box")
@@ -100,9 +96,11 @@ combine_plot_and_tree = function(plot, tree.plot, tree.height = 5) {
     if(length(plot.guide.idx) == 0 & length(tree.guide.idx) == 1)
         gtable.bigger.tree = gtable_add_cols(gtable.bigger.tree, width = plot.grob$widths[1])
     gtable.bigger.tree = expand_background(gtable.bigger.tree)
-    
-    plot(gtable.bigger.tree)
-    invisible(gtable.bigger.tree)
+    if(print) {
+        plot(gtable.bigger.tree)
+        invisible(gtable.bigger.tree)
+    }
+    return(gtable.bigger.tree)
 }
 
 
@@ -115,8 +113,7 @@ combine_plot_and_tree = function(plot, tree.plot, tree.height = 5) {
 #' @param ladderize FALSE for a non-ladderzied layout, TRUE or "right"
 #' for a ladderized layout, "left" for a layout ladderized the other
 #' way.
-#' 
-#' 
+#' @importFrom phyloseq tree_layout
 #' @export
 
 get_leaf_position = function(tree, ladderize) {
@@ -127,38 +124,3 @@ get_leaf_position = function(tree, ladderize) {
     rownames(out) = out$OTU
     return(out)
 }
-
-
-
-#' Plots a tree and data
-#'
-#' Plots a tree on top and some data associated with the tips on the bottom.
-#'
-#' @param tree A tree of class phylo
-#' @param data The data to plot, it needs to have row names that are
-#' the same as the tip names of the tree.
-#' @param annotation A vector of OTU names that should be marked.
-#' @param ladderize How to lay out the tree, see tree_layout.
-#' @param tree.height How big the tree is compared to the rest of the plots.
-#' @param scales Passed to facet_grid, should be either "free_y" or
-#' "fixed". 
-#' @param annotation.color The color for the annotation dots.
-#' @param barsep The distance of the taxonomy bar above the tree. 
-#' @param barheight The width of the taxonomy bar. 
-#' @param ... Additional arguments passed to plot_tree. 
-#'
-#' @return Plots the tree and data, returns a gtable object. 
-#'
-#' @importFrom reshape2 melt
-#' @importFrom ggplot2 ggplot
-#' 
-#' @export
-plot_tree_and_data <- function(tree, data, annotation = NULL, ladderize = TRUE,
-                               tree.height = 5, scales = "fixed",
-                               annotation.color = "firebrick1",
-                               barsep = .02, barheight = .03, ...)
-{
-    
-    combine_plot_and_tree(plot1, tree.plot, tree.height = tree.height)
-}
-

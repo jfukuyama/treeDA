@@ -4,11 +4,15 @@
 \alias{combine_plot_and_tree}
 \title{Method for combining two ggplots}
 \usage{
-combine_plot_and_tree(plot, tree.plot, tree.height = 5)
+combine_plot_and_tree(plot, tree.plot, tree.height = 5, print = TRUE)
 }
 \arguments{
 \item{plot}{A plot of data about the OTUs with the x axis
 corresponding to OTUs.}
+
+\item{print}{If true, the function will print the combined plot to
+a graphics device, otherwise it will just return the gtable object
+without printing.}
 
 \item{treePlot}{A plot of the tree.}
 
