@@ -21,4 +21,5 @@ names.
 \description{
 Create a dummy variable matrix for the response
 }
+\keyword{internal}
 

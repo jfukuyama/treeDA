@@ -29,4 +29,5 @@ For a set of coefficients defined on a matrix of (potentially
 centered and scaled) leaf and node predictors, find the equivalent
 set of coefficients on just the leaves.
 }
+\keyword{internal}
 
