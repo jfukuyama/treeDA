@@ -154,16 +154,17 @@ treedacv <- function(response, predictors, tree, folds = 5, pvec = 1:tree$Nnode,
     }
 
     ## summarize the results of cross validation
+    loss.df = data.frame(loss.matrix)
     cvmeans = rowMeans(loss.matrix[,1:(ncol(loss.matrix) - 1)])
     cvses = apply(loss.matrix[,1:(ncol(loss.matrix) - 1)], 1,
         function(x) sd(x) / sqrt(length(x) - 1))
     min.idx = which.min(cvmeans)
+    loss.df$means = cvmeans
+    loss.df$ses = cvses
     out$p.min = pvec[min.idx]
     threshold = cvmeans[min.idx] + cvses[min.idx]
     out$p.1se = min(pvec[which(cvmeans <= threshold)])
-    out$loss.matrix = loss.matrix
-    out$cvmeans = cvmeans
-    out$cvses = cvses
+    out$loss.df = loss.df
     return(out)   
 }
 
@@ -184,7 +185,7 @@ print.treedacv <- function(obj) {
 #' 
 #' @export
 plot.treedacv <- function(obj) {
-    df = data.frame(mean = obj$cvmeans, se = obj$cvse,
+    df = data.frame(mean = obj$loss.df$means, se = obj$loss.df$ses,
         p = obj$loss.matrix[,"p"])
     p = ggplot(df, aes(x = p, y = mean)) + geom_point() +
         geom_errorbar(aes(ymax = mean + se, ymin = mean - se), width = .1) +
