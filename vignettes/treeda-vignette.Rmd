@@ -1,0 +1,153 @@
+---
+title: "Adaptive gPCA Vignette"
+author: "Julia Fukuyama"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{treeDA Vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+n---
+
+# treeDA gPCA Vignette
+
+```{r, echo = FALSE}
+library(knitr)
+opts_chunk$set(fig.width = 8, fig.height = 4)
+```
+
+Here we will describe how to use the treeDA package. The package aims
+to 
+
+The first step is to load the required libraries and data. 
+```{r}
+library(treeDA)
+library(ggplot2)
+library(phyloseq)
+library(adaptiveGPCA)
+data(AntibioticPhyloseq)
+theme_set(theme_bw())
+```
+
+The main function in the package is called treeda. It takes a response
+vector giving the classes to be separated, a matrix of predictor
+variable which are related to each other by a tree, the tree which
+describes the relationships between the predictor variables, and the
+sparsity (p). In the antibiotic dataset, we have several potential
+discriminatory variables. One of these describes whether the sample
+was taken during or immediately after the subject was subjected to
+antibiotics, and we can try to find taxa which discriminate between
+these two groups using the following command:
+```{r}
+out.treeda = treeda(response = sample_data(AntibioticPhyloseq)$type,
+    predictors = otu_table(AntibioticPhyloseq),
+    tree = phy_tree(AntibioticPhyloseq), p = 15)
+```
+
+Here the output of the model is stored in an object called
+`out.treeda`. The print function will give an overview of the fitted
+model, including the number of predictors used and the confusion
+matrix for the training data. 
+```{r}
+out.treeda
+```
+From this, we see that 15 predictors were used (since this was what we
+specified in the initial call to the function). These predictors
+potentially include nodes in the tree (corresponding to taxonomic
+clades) and leaves on the tree (corresponding to individual
+species). Instead of thinking of these as nodes, we can translate them
+to all leaves (or species, or OTUs), in which case the model is using
+903 of the leaves. This indicates that some of the nodes which were
+selected as predictive were quite deep in the tree and corresponded to
+large clades of taxa.
+
+Finally, the confusion matrix shows us how well the model does on the
+trainnig data: we see that a total of 16 cases were classified
+incorrectly, split approximately evenly between cases which were really
+from the abx condition and those which were really from the no abx
+condition. 
+
+
+The object containing the output from the fit also contains other
+information. These are:
+- `means`: The mean value of each predictor.
+- `sds`: The standard deviation of each predictor.
+- `leafCoefficients`: A representation of the discriminating axis using
+only the leaves.
+- `input`: A list containing the response, predictors, and tree used to
+fit the model.
+- `nPredictors`: The number of predictors (in the node + leaf space)
+used in the model.
+- `nLeafPredictors`: The number of predictors in the leaf space used in
+the model.
+- `sda`: The sda object used in fitting the model.
+- `class.names`: The names of the classes to be discriminated between.
+- `projections`: The projections of the observations on the
+discriminating axes.
+- `classProperties`: The prior probabilities, mean in discriminating
+space, and variance in the discriminating space of the classes.
+- `predictedClasses`: Predicted classes for each observation.
+- `rss`: Residual sum of squares: the sum of squared distances between
+each observation and its class mean in the discriminating space.
+
+
+
+For comparison, we can look at the results when we try to discriminate
+between individuals instead of between the abx/no abx conditions. We
+try this with the same amount of sparsity, p = 15. 
+```{r}
+out.treeda.ind = treeda(response = sample_data(AntibioticPhyloseq)$ind,
+    predictors = otu_table(AntibioticPhyloseq),
+    tree = phy_tree(AntibioticPhyloseq), p = 15)
+out.treeda.ind
+```
+In this case, since we have three classes we obtain two discriminating
+axes, each of which uses 15 node or leaf predictors for a total of 30
+predictors. This corresponds to only 85 leaves on the tree, indicating
+that the nodes which were chosen corresponded to individual leaves or
+to much smaller clades than when our aim was to discriminate between
+the abx and no abx conditions.
+
+## Cross validation
+
+We would often like to choose the sparsity level automatically instead
+of manually. A common way of doing this is by cross validation, which
+we have implemented in the function treedacv. It takes most of the
+same arguments as as treeda: a vector containing the response, or the
+classes for each of the observations, a matrix of predictors which are
+related to each other by a tree, and the tree. In addition, the number
+of folds for the cross validation needs to be specified (the folds
+argument), and a vector giving the levels of sparsity to be compared
+by cross validation (the pvec argument). The folds argument can be
+given either as a single number, in which case the observations will
+be partitioned into the desired number of folds, or as a vector
+assigning each observation to a fold. In this case, the vector should
+have length equal to the number of observations, and the elements in
+the vector should be integers between 1 and the number of desired
+folds assigning the observations to a fold. 
+
+Here we are using five-fold cross validation, discriminating between
+the individuals in our dataset, and comparing levels of sparsity
+between 1 and 25.
+```{r}
+set.seed(0)
+out.treedacv = treedacv(response = sample_data(AntibioticPhyloseq)$ind,
+    predictors = otu_table(AntibioticPhyloseq),
+    tree = phy_tree(AntibioticPhyloseq),
+    folds = 4, pvec = 3:15)
+out.treedacv
+```
+
+```{r}
+plot(3:15,out.treedacv$cvmeans)
+out.treeda.5 = treeda(response = sample_data(AntibioticPhyloseq)$ind,
+    predictors = otu_table(AntibioticPhyloseq),
+    tree = phy_tree(AntibioticPhyloseq), p = 5)
+out.treeda.11 = treeda(response = sample_data(AntibioticPhyloseq)$ind,
+    predictors = otu_table(AntibioticPhyloseq),
+    tree = phy_tree(AntibioticPhyloseq), p = 11)
+```
+
+
+```{r}
+plot_tree_and_data()
+```
