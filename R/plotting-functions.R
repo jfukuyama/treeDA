@@ -4,6 +4,7 @@
 #' to fill the whole space.
 #'
 #' @return A gtable object with a bigger background.
+#' @keywords internal
 expand_background = function(gtable) {
     idx = which(gtable$layout[,"name"] == "background")
     if(length(idx) > 1) {
@@ -123,4 +124,32 @@ get_leaf_position = function(tree, ladderize) {
     out = data.frame(OTU = dt.sub$OTU, otu.pos = dt.sub$y)
     rownames(out) = out$OTU
     return(out)
+}
+
+
+#' Plot the discriminating vectors from treeda
+#'
+#' A function that will plot the tree as well as the coefficients
+#' selected for the discriminating axes.
+#'
+#' @param out.treeda The object resulting from a call to treeda.
+#' @param remove.bl A logical, TRUE if the tree should be plotted
+#'     after setting all branch lengths equal to the same value (tends
+#'     to make trees that look nicer) or not.
+#' @param ladderize Layout parameter for the tree. 
+#' @return A plot of the tree and the coefficients.
+#' @export
+plot_coefficients <- function(out.treeda, remove.bl = TRUE, ladderize = TRUE) {
+    tr = out.treeda$input$tree
+    if(remove.bl) {
+        tr$edge.length = rep(1, length(tr$edge.length))
+    }   
+    tree.plot = plot_tree(tr, ladderize = ladderize) + coord_flip() + scale_x_reverse()
+    leaf.position = get_leaf_position(out.treeda$input$tree, ladderize = ladderize)$otu.pos
+    coef = as(out.treeda$leafCoefficients$beta, "matrix")
+    colnames(coef) = paste("Axis", 1:ncol(coef))
+    df = data.frame(coef, leaf.position)
+    df = reshape2::melt(df, id.vars = "leaf.position")
+    coef.plot = ggplot(df) + geom_point(aes(x = leaf.position, y = value)) + facet_wrap(~ variable)
+    combine_plot_and_tree(coef.plot, tree.plot)
 }
