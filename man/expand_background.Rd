@@ -16,4 +16,5 @@ A gtable object with a bigger background.
 \description{
 Expand the background of a gtable.
 }
+\keyword{internal}
 
