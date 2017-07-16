@@ -18,6 +18,7 @@ checkPredictorsAndTree <- function(predictors, tree) {
 #' Takes the edge matrix from a phylo-class object and turns it into a
 #' list where the entries are nodes and the elements are vectors with
 #' the children of the nodes.
+#' @keywords internal
 edgesToChildren <- function(edges) {
     ## ape requires that the tips are numbered 1:n, nodes are numbered
     ## n+1:n+m (n tips, m internal nodes), root is numbered n+1. The
@@ -134,7 +135,7 @@ treedacv <- function(response, predictors, tree, folds = 5, pvec = 1:tree$Nnode,
     } else {
         partition = folds
     }
-    
+    A = makeDescendantMatrix(tree)
     ## perform the cross validation
     loss.matrix = matrix(NA, nrow = length(pvec), ncol = max(partition) + 1)
     colnames(loss.matrix) = c(paste("Fold", 1:max(partition), sep = "."), "p")
@@ -144,7 +145,7 @@ treedacv <- function(response, predictors, tree, folds = 5, pvec = 1:tree$Nnode,
             train.idx = which(partition != i)
             out.treeda = treeda(response[train.idx], predictors[train.idx,], tree,
                 pvec[p.idx], k = k, center = center, scale = scale,
-                check.consist = FALSE, class.names = class.names, ...)
+                check.consist = FALSE, class.names = class.names, A = A, ...)
             preds.treeda = predict(out.treeda, newdata = predictors[test.idx,],
                 newresponse = response[test.idx], check.consist = FALSE)
             loss.matrix[p.idx,i] = mean(preds.treeda$classes != response[test.idx])
@@ -153,16 +154,17 @@ treedacv <- function(response, predictors, tree, folds = 5, pvec = 1:tree$Nnode,
     }
 
     ## summarize the results of cross validation
+    loss.df = data.frame(loss.matrix)
     cvmeans = rowMeans(loss.matrix[,1:(ncol(loss.matrix) - 1)])
     cvses = apply(loss.matrix[,1:(ncol(loss.matrix) - 1)], 1,
         function(x) sd(x) / sqrt(length(x) - 1))
     min.idx = which.min(cvmeans)
+    loss.df$means = cvmeans
+    loss.df$ses = cvses
     out$p.min = pvec[min.idx]
     threshold = cvmeans[min.idx] + cvses[min.idx]
-    out$p.1se = min(pvec[which(cvmeans < threshold)])
-    out$loss.matrix = loss.matrix
-    out$cvmeans = cvmeans
-    out$cvses = cvses
+    out$p.1se = min(pvec[which(cvmeans <= threshold)])
+    out$loss.df = loss.df
     return(out)   
 }
 
@@ -183,7 +185,7 @@ print.treedacv <- function(obj) {
 #' 
 #' @export
 plot.treedacv <- function(obj) {
-    df = data.frame(mean = obj$cvmeans, se = obj$cvse,
+    df = data.frame(mean = obj$loss.df$means, se = obj$loss.df$ses,
         p = obj$loss.matrix[,"p"])
     p = ggplot(df, aes(x = p, y = mean)) + geom_point() +
         geom_errorbar(aes(ymax = mean + se, ymin = mean - se), width = .1) +
@@ -203,6 +205,7 @@ plot.treedacv <- function(obj) {
 #' response.
 #' @return A dummy variable matrix with column names giving the class
 #' names.
+#' @keywords internal
 makeResponseMatrix <- function(response, class.names = NULL) {
     if(is.numeric(response)) {
         stop("'response' should be a factor or character vector.")
@@ -237,6 +240,7 @@ makeResponseMatrix <- function(response, class.names = NULL) {
 #' the discriminating axes and the intercepts for each of the
 #' discriminating axes.
 #' @importFrom Matrix Matrix
+#' @keywords internal
 makeLeafCoefficients <- function(sda.out, descendantMatrix, means, sds) {
     beta = sda.out$beta
     if(!is.null(sds)) {
@@ -264,6 +268,7 @@ makeLeafCoefficients <- function(sda.out, descendantMatrix, means, sds) {
 #' @return A matrix describing the ancestry structure of a tree. 
 #'
 #' @importFrom Matrix Matrix
+#' @keywords internal
 makeDescendantMatrix <- function(tree) {
     etc = edgesToChildren(tree$edge)
     n = length(tree$tip.label)
@@ -388,7 +393,15 @@ coef.treeda <- function(obj, type = c("leaves", "nodes")) {
     return(beta)
 }
 
-
+#' Compute properties of the classes
+#'
+#' For each class, computes the prior probabilities, means, and
+#' variances for that class.
+#'
+#' @param response A vector containing the response for each observation.  
+#' @param projections A matrix giving the projections of each
+#' observation onto the discriminating axes.
+#' @keywords internal
 makeClassProperties <- function(response, projections) {
     out = list()
     class.names = unique(response)

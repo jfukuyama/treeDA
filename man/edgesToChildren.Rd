@@ -11,4 +11,5 @@ Takes the edge matrix from a phylo-class object and turns it into a
 list where the entries are nodes and the elements are vectors with
 the children of the nodes.
 }
+\keyword{internal}
 

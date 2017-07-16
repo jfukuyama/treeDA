@@ -16,4 +16,5 @@ A matrix describing the ancestry structure of a tree.
 Make a matrix describing the ancestry structure of a tree. Element
 (i,j) indicates whether leaf i is a descendant of node j.
 }
+\keyword{internal}
 

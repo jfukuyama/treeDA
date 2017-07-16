@@ -4,6 +4,7 @@
 #' to fill the whole space.
 #'
 #' @return A gtable object with a bigger background.
+#' @keywords internal
 expand_background = function(gtable) {
     idx = which(gtable$layout[,"name"] == "background")
     if(length(idx) > 1) {
@@ -48,10 +49,10 @@ expand_background = function(gtable) {
 combine_plot_and_tree = function(plot, tree.plot, tree.height = 5, print = TRUE) {
     plot.grob = ggplotGrob(plot)
     tree.grob = ggplotGrob(tree.plot)
-    tree.guide.idx = which(tree.grob$layout[,"name"] == "guide-box")
-    tree.panel.idx = which(tree.grob$layout[,"name"] == "panel")
-    plot.guide.idx = which(plot.grob$layout[,"name"] == "guide-box")
-    plot.panel.idx = which(plot.grob$layout[,"name"] == "panel")
+    tree.guide.idx = which(substr(tree.grob$layout[,"name"], 1, 9) == "guide-box")
+    tree.panel.idx = which(substr(tree.grob$layout[,"name"], 1, 5) == "panel")
+    plot.guide.idx = which(substr(plot.grob$layout[,"name"], 1, 9) == "guide-box")
+    plot.panel.idx = which(substr(plot.grob$layout[,"name"], 1, 5) == "panel")
     if(length(tree.panel.idx) == 0) {
         stop("The tree plot isn't in the right form, don't know how to combine it.")
     }
@@ -123,4 +124,43 @@ get_leaf_position = function(tree, ladderize) {
     out = data.frame(OTU = dt.sub$OTU, otu.pos = dt.sub$y)
     rownames(out) = out$OTU
     return(out)
+}
+
+
+#' Plot the discriminating vectors from treeda
+#'
+#' A function that will plot the tree as well as the coefficients
+#' selected for the discriminating axes.
+#'
+#' @param out.treeda The object resulting from a call to treeda.
+#' @param remove.bl A logical, TRUE if the tree should be plotted
+#'     after setting all branch lengths equal to the same value (tends
+#'     to make trees that look nicer) or not.
+#' @param ladderize Layout parameter for the tree. 
+#' @return A plot of the tree and the coefficients.
+#' @importFrom grid grid.draw
+#' @export
+plot_coefficients <- function(out.treeda, remove.bl = TRUE, ladderize = TRUE, tree.height = 2) {
+    tr = out.treeda$input$tree
+    if(remove.bl) {
+        tr$edge.length = rep(1, length(tr$edge.length))
+    }
+    tree.plot = plot_tree(tr, ladderize = ladderize) + coord_flip() + scale_x_reverse()
+    leaf.position = get_leaf_position(out.treeda$input$tree, ladderize = ladderize)$otu.pos
+    coef = as(out.treeda$leafCoefficients$beta, "matrix")
+    colnames(coef) = paste("Axis", 1:ncol(coef))
+    df = data.frame(coef, leaf.position)
+    df = reshape2::melt(df, id.vars = "leaf.position")
+    coef.plot = ggplot(df) +
+        geom_point(aes(x = leaf.position, y = value)) +
+        facet_grid(variable ~ .) +
+        ylab("Coefficient value") + 
+        theme(axis.text.x = element_blank(),
+              axis.ticks.x = element_blank(),
+              axis.title.x = element_blank(),
+              panel.grid.major.x = element_blank(),
+              panel.grid.minor.x = element_blank())
+    p = combine_plot_and_tree(coef.plot, tree.plot, tree.height = tree.height)
+    grid::grid.draw(p)
+    invisible(p)
 }

@@ -10,17 +10,17 @@ combine_plot_and_tree(plot, tree.plot, tree.height = 5, print = TRUE)
 \item{plot}{A plot of data about the OTUs with the x axis
 corresponding to OTUs.}
 
+\item{tree.plot}{A plot of the tree.}
+
+\item{tree.height}{The relative amount of space in the plot the tree
+should take up.}
+
 \item{print}{If true, the function will print the combined plot to
 a graphics device, otherwise it will just return the gtable object
 without printing.}
-
-\item{treePlot}{A plot of the tree.}
-
-\item{treeHeight}{The relative amount of space in the plot the tree
-should take up.}
 }
 \value{
-Prints the combined plot, returns a gtable object.
+Returns a gtable object.
 }
 \description{
 This method takes a ggplot of some data along the tips of the trees
