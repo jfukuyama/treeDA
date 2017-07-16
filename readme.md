@@ -20,4 +20,5 @@ with a given sparsity level, and `treedacv`, which performs
 cross-validation to choose the sparsity level. There is also a
 function to plot the leaf coefficients obtained from the model aligned
 to the tree (`plot_coefficients`). A full vignette showing an analysis
-of microbiome data is available in the vignettes directory.
+of microbiome data is available in the vignettes directory, or by
+clicking [here](http://htmlpreview.github.io/?https://github.com/jfukuyama/treeDA/blob/documentation/vignettes/treeda-vignette.html).
