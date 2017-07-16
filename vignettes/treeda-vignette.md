@@ -1,24 +1,9 @@
----
-title: "treeDA vignette"
-author: "Julia Fukuyama"
-date: July 15, 2017
-output:
-  rmarkdown::html_document:
-    toc: true
-    toc_float: true
-    theme: lumen
-    keep_md: true
-vignette: >
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteIndexEntry{treeDA vignette}
-  %\VignetteEncoding{UTF-8}
----
+# treeDA vignette
+Julia Fukuyama  
+July 15, 2017  
 
 
-```{r, echo = FALSE}
-library(knitr)
-opts_chunk$set(fig.width = 8, fig.height = 4, cache = TRUE)
-```
+
 
 Here we will describe how to use the treeDA package. The package
 provides functions to perform sparse discriminant analysis informed by
@@ -36,7 +21,8 @@ phyloseq object) and by the the antibiotic condition. The antibiotic
 treatment is discretized into abx/no abx in a variable called `type`, where abx corresponds to
 samples taken when the subject was taking the antibiotic and the week
 following, and no abx corresponds to all the other samples. 
-```{r packages}
+
+```r
 library(treeDA)
 library(ggplot2)
 library(phyloseq)
@@ -55,7 +41,8 @@ discriminatory variables. One of these describes whether the sample
 was taken during or immediately after the subject was subjected to
 antibiotics, and we can try to find taxa which discriminate between
 these two groups using the following command:
-```{r treeda-type}
+
+```r
 out.treeda = treeda(response = sample_data(AntibioticPhyloseq)$type,
     predictors = otu_table(AntibioticPhyloseq),
     tree = phy_tree(AntibioticPhyloseq), p = 15)
@@ -67,8 +54,23 @@ Here the output of the model is stored in an object called
 `out.treeda`. The print function will give an overview of the fitted
 model, including the number of predictors used and the confusion
 matrix for the training data. 
-```{r treeda-type-print}
+
+```r
 out.treeda
+```
+
+```
+## An object of class treeda
+## -------------------------
+## 15 predictors in the expanded space
+## were selected, corresponding to 903 
+## leaves on the tree
+## -------------------------
+## Confusion matrix:
+##         predicted
+## truth    abx no abx
+##   abx     58      9
+##   no abx   7     88
 ```
 From this, we see that 15 predictors were used (since this was what we
 specified in the initial call to the function). These predictors
@@ -131,27 +133,49 @@ positive scores along the discriminating axis correspond to the no abx
 condition, and that there is some difference between the individuals
 but that the quality of the model is approximately the same across the
 three subjects. 
-```{r treeda-type-sample-plot}
+
+```r
 ggplot(data.frame(sample_data(AntibioticPhyloseq), projections = out.treeda$projections)) +
     geom_point(aes(x = ind, y = projections, color = type))
 ```
+
+![](treeda-vignette_files/figure-html/treeda-type-sample-plot-1.png)<!-- -->
 
 ## Coefficient plotting
 We can also look at the coefficient vector describing the
 discriminating axis using the `plot_coefficients` function. This gives
 a plot of the tree with the leaf coefficients aligned underneath. 
-```{r treeda-type-coef-plot}
+
+```r
 plot_coefficients(out.treeda)
 ```
+
+![](treeda-vignette_files/figure-html/treeda-type-coef-plot-1.png)<!-- -->
 
 For comparison, we can look at the results when we try to discriminate
 between individuals instead of between the abx/no abx conditions. We
 try this with the same amount of sparsity, p = 15. 
-```{r treeda-ind}
+
+```r
 out.treeda.ind = treeda(response = sample_data(AntibioticPhyloseq)$ind,
     predictors = otu_table(AntibioticPhyloseq),
     tree = phy_tree(AntibioticPhyloseq), p = 15)
 out.treeda.ind
+```
+
+```
+## An object of class treeda
+## -------------------------
+## 30 predictors in the expanded space
+## were selected, corresponding to 85 
+## leaves on the tree
+## -------------------------
+## Confusion matrix:
+##      predicted
+## truth  D  E  F
+##     D 56  0  0
+##     E  0 52  0
+##     F  0  0 54
 ```
 In this case, since we have three classes we obtain two discriminating
 axes, each of which uses 15 node or leaf predictors for a total of 30
@@ -165,9 +189,12 @@ plot for the abx/no abx model. Note that this model contains two
 discriminating axes because we have three classes, while the abx/no
 abx model had only one discriminating axis because there were two
 classes. 
-```{r tereda-ind-coef-plot}
+
+```r
 plot_coefficients(out.treeda.ind)
 ```
+
+![](treeda-vignette_files/figure-html/tereda-ind-coef-plot-1.png)<!-- -->
 
 ## Cross validation
 
@@ -198,7 +225,8 @@ would like the most parsimonious model which is statistically
 indistinguishable from that with the minimum CV error). For us, the
 minimum CV error is at 11, but if we were following the one standard
 error rule we would use 7. 
-```{r treeda-ind-cv}
+
+```r
 set.seed(0)
 out.treedacv = treedacv(response = sample_data(AntibioticPhyloseq)$type,
     predictors = otu_table(AntibioticPhyloseq),
@@ -207,27 +235,55 @@ out.treedacv = treedacv(response = sample_data(AntibioticPhyloseq)$type,
 out.treedacv
 ```
 
+```
+## Output from cross-validation of treeda
+## --------------------------------------
+## Value of p with minimum cv loss: 11
+## Smallest p within 1 se of minimum cv loss: 7
+```
+
 The results from the cross validation are stored in
 `out.treedacv$loss.df`. This data frame contains the CV error for each
 fold, the mean CV error, and the standard error of the CV error for
 each value of p. We can use this matrix to plot the CV error as a
 function of the sparsity. 
-```{r treeda-ind-plot-cv, fig.width = 5, fig.height = 3}
+
+```r
 ggplot(out.treedacv$loss.df) + geom_point(aes(x = p, y = means)) +
     xlab("Sparsity") + ylab("CV Error") 
 ```
 
+![](treeda-vignette_files/figure-html/treeda-ind-plot-cv-1.png)<!-- -->
+
 
 We can then fit the model with 11 predictors to all the data and look
 at the plot of the coefficients along the discriminating axis. 
-```{r treeda-ind-fit-2}
+
+```r
 out.treeda.11 = treeda(response = sample_data(AntibioticPhyloseq)$type,
     predictors = otu_table(AntibioticPhyloseq),
     tree = phy_tree(AntibioticPhyloseq), p = 11)
 out.treeda.11 
 ```
 
+```
+## An object of class treeda
+## -------------------------
+## 11 predictors in the expanded space
+## were selected, corresponding to 892 
+## leaves on the tree
+## -------------------------
+## Confusion matrix:
+##         predicted
+## truth    abx no abx
+##   abx     58      9
+##   no abx   8     87
+```
 
-```{r treeda-ind-plot-coef}
+
+
+```r
 plot_coefficients(out.treeda.11)
 ```
+
+![](treeda-vignette_files/figure-html/treeda-ind-plot-coef-1.png)<!-- -->
