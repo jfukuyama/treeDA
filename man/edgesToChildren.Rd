@@ -12,4 +12,3 @@ list where the entries are nodes and the elements are vectors with
 the children of the nodes.
 }
 \keyword{internal}
-

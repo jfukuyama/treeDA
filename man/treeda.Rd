@@ -12,14 +12,28 @@ treeda(response, predictors, tree, p, k = nclasses - 1, center = TRUE,
 predicted.}
 
 \item{predictors}{A matrix of predictor variables corresponding to
-the leaves of the tree and in the same order as the leaves of the
-tree.}
+the leaves of the tree and in the same order as the leaves of
+the tree.}
 
 \item{tree}{A tree of class phylo.}
 
 \item{p}{The number of predictors to use.}
 
 \item{k}{The number of components to use.}
+
+\item{center}{Center the predictor variables?}
+
+\item{scale}{Scale the predictor variables?}
+
+\item{class.names}{Optional argument giving the class names, only
+necessary if the}
+
+\item{check.consist}{Check consistency of the predictor matrix and
+the tree.}
+
+\item{A}{A matrix describing the tree structure. If it has been
+computed before it can be passed in here and will not be
+recomputed.}
 
 \item{...}{Additional arguments to be passed to sda}
 }
@@ -28,4 +42,3 @@ Performs sparse discriminant analysis on tree-structured data by
 augmenting the predictor matrix with additional predictors
 corresponding to the nodes.
 }
-

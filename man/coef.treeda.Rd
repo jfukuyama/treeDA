@@ -4,9 +4,16 @@
 \alias{coef.treeda}
 \title{Get the coefficients from a treeda fit}
 \usage{
-\method{coef}{treeda}(obj, type = c("leaves", "nodes"))
+\method{coef}{treeda}(object, type = c("leaves", "nodes"), ...)
+}
+\arguments{
+\item{object}{An object of class treeda}
+
+\item{type}{Should the coefficients be in the leaf space or the
+node space?}
+
+\item{...}{Additional arguments.}
 }
 \description{
 Get the coefficients from a treeda fit
 }
-

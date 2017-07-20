@@ -4,21 +4,27 @@
 \alias{predict.treeda}
 \title{Predict using new data}
 \usage{
-\method{predict}{treeda}(treeda, newdata, newresponse = NULL,
-  check.consist = TRUE)
+\method{predict}{treeda}(object, newdata, newresponse = NULL,
+  check.consist = TRUE, ...)
 }
 \arguments{
-\item{treeda}{Output from treeda function}
+\item{object}{Output from treeda function.}
 
-\item{newdata}{New data}
+\item{newdata}{New data.}
+
+\item{newresponse}{New response vector, not required.}
+
+\item{check.consist}{Check the consistency between the tree and
+predictor matrix?}
+
+\item{...}{Additional arguments (not used).}
 }
 \value{
 A list containing the projections of the new data onto the
-discriminating axes, the predicted classes, and the rss (if the
-ground truth for the responses is available).
+    discriminating axes, the predicted classes, and the rss (if the
+    ground truth for the responses is available).
 }
 \description{
 Given a fitted treeda model, get the predicted classes and
 projections onto the discriminating axes for new data.
 }
-

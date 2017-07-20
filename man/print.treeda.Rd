@@ -4,9 +4,13 @@
 \alias{print.treeda}
 \title{Print a treeda object}
 \usage{
-print.treeda(obj)
+\method{print}{treeda}(x, ...)
+}
+\arguments{
+\item{x}{An object of class treeda.}
+
+\item{...}{Additional arguments (not used).}
 }
 \description{
 Print a treeda object
 }
-

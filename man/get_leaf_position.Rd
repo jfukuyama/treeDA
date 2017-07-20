@@ -17,4 +17,3 @@ way.}
 Takes a tree, returns a vector with names describing the OTU and
 entries giving the position of that OTU in the tree layout.
 }
-

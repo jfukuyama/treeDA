@@ -17,4 +17,3 @@ For each class, computes the prior probabilities, means, and
 variances for that class.
 }
 \keyword{internal}
-

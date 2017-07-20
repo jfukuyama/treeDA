@@ -75,7 +75,7 @@ combine_plot_and_tree = function(plot, tree.plot, tree.height = 5, print = TRUE)
             stop ("The data plot has too many data panels, don't know how to combine it with the tree plot.")
     }
     ## strip the white space on top here
-    gtable.bigger = gtable_add_rows(plot.grob, height = unit(tree.height, "null"), pos = 0)
+    gtable.bigger = gtable_add_rows(plot.grob, heights = unit(tree.height, "null"), pos = 0)
     gtable.bigger.tree = gtable_add_grob(gtable.bigger, tree.panel.grob,
         t = 1, l = plot.panel.column, r = plot.panel.column)
     if(length(plot.guide.idx) == 0 & length(tree.guide.idx) == 1) {
@@ -83,7 +83,7 @@ combine_plot_and_tree = function(plot, tree.plot, tree.height = 5, print = TRUE)
         ## default position for gtable_add_columns is on the right,
         ## which is where we want it
         gtable.bigger.tree = gtable_add_cols(gtable.bigger.tree,
-            width = tree.grob$widths[tree.guide.column])
+            widths = tree.grob$widths[tree.guide.column])
         gtable.bigger.tree = gtable_add_grob(gtable.bigger.tree, tree.guide.grob,
             t = 1, l = dim(gtable.bigger.tree)[2], r = dim(gtable.bigger.tree)[2])
     } else if(length(plot.guide.idx) == 1 & length(tree.guide.idx) == 1) {
@@ -93,9 +93,9 @@ combine_plot_and_tree = function(plot, tree.plot, tree.height = 5, print = TRUE)
     ## add some padding around the top and right (right only if we
     ## needed to add an extra column for the tree guide)
     gtable.bigger.tree = gtable_add_rows(gtable.bigger.tree,
-        height = plot.grob$heights[dim(plot.grob[1])], pos = 0)
+        heights = plot.grob$heights[dim(plot.grob[1])], pos = 0)
     if(length(plot.guide.idx) == 0 & length(tree.guide.idx) == 1)
-        gtable.bigger.tree = gtable_add_cols(gtable.bigger.tree, width = plot.grob$widths[1])
+        gtable.bigger.tree = gtable_add_cols(gtable.bigger.tree, widths = plot.grob$widths[1])
     gtable.bigger.tree = expand_background(gtable.bigger.tree)
     if(print) {
         plot(gtable.bigger.tree)
@@ -136,9 +136,12 @@ get_leaf_position = function(tree, ladderize) {
 #' @param remove.bl A logical, TRUE if the tree should be plotted
 #'     after setting all branch lengths equal to the same value (tends
 #'     to make trees that look nicer) or not.
-#' @param ladderize Layout parameter for the tree. 
+#' @param ladderize Layout parameter for the tree.
+#' @param tree.height The height of the tree relative to the height of the plot below. 
 #' @return A plot of the tree and the coefficients.
 #' @importFrom grid grid.draw
+#' @importFrom phyloseq plot_tree
+#' @importFrom ggplot2 coord_flip scale_x_reverse facet_grid element_blank aes_string ylab theme
 #' @export
 plot_coefficients <- function(out.treeda, remove.bl = TRUE, ladderize = TRUE, tree.height = 2) {
     tr = out.treeda$input$tree
@@ -152,7 +155,7 @@ plot_coefficients <- function(out.treeda, remove.bl = TRUE, ladderize = TRUE, tr
     df = data.frame(coef, leaf.position)
     df = reshape2::melt(df, id.vars = "leaf.position")
     coef.plot = ggplot(df) +
-        geom_point(aes(x = leaf.position, y = value)) +
+        geom_point(aes_string(x = "leaf.position", y = "value")) +
         facet_grid(variable ~ .) +
         ylab("Coefficient value") + 
         theme(axis.text.x = element_blank(),

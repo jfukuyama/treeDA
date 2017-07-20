@@ -4,9 +4,13 @@
 \alias{print.treedacv}
 \title{Print treedacv object}
 \usage{
-print.treedacv(obj)
+\method{print}{treedacv}(x, ...)
+}
+\arguments{
+\item{x}{An object of class treedacv}
+
+\item{...}{Optional arguments to be passed to print.treedacv}
 }
 \description{
 Print treedacv object
 }
-

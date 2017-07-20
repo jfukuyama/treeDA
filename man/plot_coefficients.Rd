@@ -15,6 +15,8 @@ after setting all branch lengths equal to the same value (tends
 to make trees that look nicer) or not.}
 
 \item{ladderize}{Layout parameter for the tree.}
+
+\item{tree.height}{The height of the tree relative to the height of the plot below.}
 }
 \value{
 A plot of the tree and the coefficients.
@@ -23,4 +25,3 @@ A plot of the tree and the coefficients.
 A function that will plot the tree as well as the coefficients
 selected for the discriminating axes.
 }
-

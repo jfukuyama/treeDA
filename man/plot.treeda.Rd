@@ -4,15 +4,17 @@
 \alias{plot.treeda}
 \title{Plot treeda object}
 \usage{
-\method{plot}{treeda}(obj, type = c("both", "variables", "samples"),
-  axes = c(1, 2))
+\method{plot}{treeda}(x, type = c("both", "variables", "samples"),
+  axes = c(1, 2), ...)
 }
 \arguments{
-\item{obj}{The treeda object to plot}
+\item{x}{The treeda object to plot}
 
 \item{type}{Plot the variables, the samples, or both?}
 
 \item{axes}{The axes to plot the samples along.}
+
+\item{...}{Additional arguments (not used).}
 }
 \value{
 A ggplot object
@@ -21,4 +23,3 @@ A ggplot object
 Provides a plot of the projections of the samples onto the
 discriminating axes
 }
-

@@ -28,6 +28,10 @@ of the dataset.}
 \item{center}{Center the predictors?}
 
 \item{scale}{Scale the predictors?}
+
+\item{class.names}{A vector giving the names of the classes.}
+
+\item{...}{Additional arguments to be passed to treeda.}
 }
 \value{
 A list with the value of p with minimum cv error, the
@@ -38,4 +42,3 @@ the mean and se of the loss for each value of p.
 \description{
 Performs cross-validation of a treeda fit.
 }
-
