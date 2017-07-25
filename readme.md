@@ -6,13 +6,24 @@ for use in microbiome data analysis, but in principle it could be used
 in any situation in which the analyst has a number of classes to be
 separated and a tree structure to the predictor variables.
 
-The package can be installed using the command
-```r
-devtools::install_github("jfukuyam/treeDA")
+The package is available on CRAN and can be installed using
+```
+install.packages("treeDA")
 ```
 and then loaded with
-```r
+```
 library("treeDA")
+```
+Since `treeDA` was intended to be used to analyze microbiome data, it
+depends on `phyloseq`, which is a bioconductor package and might need
+to be installed separately. Installation of phyloseq is described on
+the
+[bioconductor website](http://bioconductor.org/packages/release/bioc/html/phyloseq.html),
+and is accomplished with the following commands in R:
+```
+## try http:// if https:// URLs are not supported
+source("https://bioconductor.org/biocLite.R")
+biocLite("phyloseq")
 ```
 
 The main functions in the package are `treeda`, which fits a model
