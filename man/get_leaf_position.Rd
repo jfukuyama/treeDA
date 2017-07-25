@@ -7,13 +7,13 @@
 get_leaf_position(tree, ladderize)
 }
 \arguments{
-\item{tree}{A phylogenetic tree}
+\item{tree}{A tree of class \code{phylo}.}
 
 \item{ladderize}{FALSE for a non-ladderzied layout, TRUE or "right"
 for a ladderized layout, "left" for a layout ladderized the other
 way.}
 }
 \description{
-Takes a tree, returns a vector with names describing the OTU and
-entries giving the position of that OTU in the tree layout.
+Takes a tree, returns a vector with names describing the leaves and
+entries giving the position of that leaf in the tree layout.
 }

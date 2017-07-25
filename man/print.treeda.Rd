@@ -7,9 +7,9 @@
 \method{print}{treeda}(x, ...)
 }
 \arguments{
-\item{x}{An object of class treeda.}
+\item{x}{\code{treeda} object.}
 
-\item{...}{Additional arguments (not used).}
+\item{...}{Not used.}
 }
 \description{
 Print a treeda object

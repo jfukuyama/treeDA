@@ -1,5 +1,8 @@
-## tree definition in http://ape-package.ird.fr/misc/FormatTreeR_24Oct2012.pdf
-
+#' Check predictors
+#'
+#' Checks whether the predictors are consistent with the tree
+#' structure.
+#' @keywords internal
 checkPredictorsAndTree <- function(predictors, tree) {
     if(ncol(predictors) != length(tree$tip.label)) {
         stop("Predictor matrix has different number of columns than tree")
@@ -35,33 +38,48 @@ edgesToChildren <- function(edges) {
     return(etc)
 }
 
-#' Tree-based SDA
+#' Tree-based sparse discriminant analysis
 #' 
-#' Performs sparse discriminant analysis on tree-structured data by
-#' augmenting the predictor matrix with additional predictors
-#' corresponding to the nodes.
+#' Performs tree-structured sparse discriminant analysis using an
+#' augmented predictor matrix with additional predictors corresponding
+#' to the nodes and then translating the parameters back in terms of
+#' only the leaves.
 #'
 #' @param response A factor or character vector giving the class to be
 #'     predicted.
 #' @param predictors A matrix of predictor variables corresponding to
 #'     the leaves of the tree and in the same order as the leaves of
 #'     the tree.
-#' @param tree A tree of class phylo.
+#' @param tree A tree of class \code{phylo}.
 #' @param p The number of predictors to use.
 #' @param k The number of components to use.
 #' @param center Center the predictor variables?
 #' @param scale Scale the predictor variables?
-#' @param class.names Optional argument giving the class names, only
-#'     necessary if the
+#' @param class.names Optional argument giving the class names.
 #' @param check.consist Check consistency of the predictor matrix and
 #'     the tree.
 #' @param A A matrix describing the tree structure. If it has been
 #'     computed before it can be passed in here and will not be
 #'     recomputed.
 #' @param ... Additional arguments to be passed to sda
+#' @return An object of class \code{treeda}. Contains the coefficients
+#'     in the original predictor space (\code{leafCoefficients}), the
+#'     number of predictors used in the node + leaf space
+#'     (\code{nPredictors}), number of leaf predictors used
+#'     (\code{nLeafPredictors}), the projections of the samples onto
+#'     the discriminating axes (\code{projections}), and the sparse
+#'     discriminant analysis object that was used in the fit
+#'     (\code{sda}).
 #' @importFrom sparseLDA sda
 #' @importFrom stats sd
 #' @importFrom Matrix colMeans
+#' @examples
+#' data(treeda_example)
+#' out.treeda = treeda(response = treeda_example$response,
+#'     predictors = treeda_example$predictors,
+#'     tree = treeda_example$tree,
+#'     p = 1)
+#' out.treeda
 #' @export
 treeda <- function(response, predictors, tree, p, k = nclasses - 1,
                    center = TRUE, scale = TRUE, class.names = NULL, check.consist = TRUE,
@@ -106,12 +124,12 @@ treeda <- function(response, predictors, tree, p, k = nclasses - 1,
 
 #' treeda cross validation
 #'
-#' Performs cross-validation of a treeda fit.
+#' Performs cross-validation of a \code{\link{treeda}} fit.
 #'
 #' @param response The classes to be predicted. 
 #' @param predictors A matrix of predictors corresponding to the tips
 #' of the tree.
-#' @param tree A tree object of class phylo.
+#' @param tree A tree object of class \code{phylo}.
 #' @param folds Either a single number corresponding to the number of
 #' folds of cross-validation to perform or a vector of integers
 #' ranging from 1 to the number of folds desired giving the partition
@@ -121,12 +139,21 @@ treeda <- function(response, predictors, tree, p, k = nclasses - 1,
 #' @param center Center the predictors?
 #' @param scale Scale the predictors?
 #' @param class.names A vector giving the names of the classes.
-#' @param ... Additional arguments to be passed to treeda. 
+#' @param ... Additional arguments to be passed to \code{\link{treeda}}. 
 #'
-#' @return A list with the value of p with minimum cv error, the
-#' minimum value of p with in 1 e of the minimum cv error, a matrix
-#' with the loss for each fold and each value of p, and vectors with
-#' the mean and se of the loss for each value of p.
+#' @return A list with the value of p with minimum cv error
+#'     (\code{p.min}), the minimum value of p with in 1 se of the
+#'     minimum cv error (\code{p.1se}), and a data frame containing
+#'     the loss for each fold, mean loss, and standard error of the
+#'     loss for each value of p (\code{loss.df}).
+#' 
+#' @examples
+#' data(treeda_example)
+#' out.treedacv = treedacv(response = treeda_example$response,
+#'     predictors = treeda_example$predictors,
+#'     tree = treeda_example$tree,
+#'     pvec = 1:10)
+#' out.treedacv
 #' @export
 treedacv <- function(response, predictors, tree, folds = 5, pvec = 1:tree$Nnode,
                      k = nclasses - 1, center = TRUE, scale = TRUE, class.names = NULL, ...) {
@@ -180,11 +207,11 @@ treedacv <- function(response, predictors, tree, folds = 5, pvec = 1:tree$Nnode,
     return(out)   
 }
 
-#' Print treedacv object
-#' @param x An object of class treedacv
-#' @param ... Optional arguments to be passed to print.treedacv
-#' @export
+#' Print treedacv objects
+#' @param x \code{treedacv} object.
+#' @param ... Not used
 #' @method print treedacv
+#' @export
 print.treedacv <- function(x, ...) {
     cat("Output from cross-validation of treeda\n")
     cat("--------------------------------------\n")
@@ -195,17 +222,23 @@ print.treedacv <- function(x, ...) {
 
 #' Plot a treedacv object
 #'
-#' Gives a plot of the cross-validation error with standard error bars
-#' @param x An object of class treedacv. 
-#' @param ... Additional arguments (not used). 
+#' Plots the cross-validation error with standard error bars.
+#' @param x An object of class \code{treedacv}. 
+#' @param ... Not used. 
+#' @importFrom ggplot2 ggplot geom_point aes_string geom_errorbar ylab xlab
+#' @examples
+#' data(treeda_example)
+#' out.treedacv = treedacv(response = treeda_example$response,
+#'     predictors = treeda_example$predictors,
+#'     tree = treeda_example$tree,
+#'     pvec = 1:10)
+#' plot(out.treedacv)
 #' @export
-#' @importFrom ggplot2 ggplot geom_point aes_string geom_errorbar
+#' @method plot treedacv
 plot.treedacv <- function(x, ...) {
-    df = data.frame(mean = x$loss.df$means, se = x$loss.df$ses,
-        p = x$loss.matrix[,"p"])
-    p = ggplot(df, aes_string(x = "p", y = "mean")) + geom_point() +
-        geom_errorbar(aes_string(ymax = "mean + se", ymin = "mean - se"), width = .1) +
-        ylab("Mean cv loss")
+    p = ggplot(x$loss.df) + geom_point(aes_string(x = "p", y = "means")) +
+        geom_errorbar(aes_string(x = "p", ymax = "means + ses", ymin = "means - ses"), width = .1) +
+        ylab("Mean CV Error") + xlab("Sparsity")
     p
 }
     
@@ -307,11 +340,10 @@ makeDescendantMatrix <- function(tree) {
 }
 
 #' Print a treeda object
-#' 
-#' @param x An object of class treeda.
-#' @param ... Additional arguments (not used). 
-#' @export
+#' @param x \code{treeda} object.
+#' @param ... Not used. 
 #' @method print treeda
+#' @export
 print.treeda <- function(x, ...) {
     cat("An object of class treeda\n")
     cat("-------------------------\n")
@@ -323,55 +355,37 @@ print.treeda <- function(x, ...) {
     with(x, print(table(truth = input$response, predicted = predictedClasses)))
 }
 
-
-#' Plot treeda object
-#'
-#' Provides a plot of the projections of the samples onto the
-#' discriminating axes
-#'
-#' @param x The treeda object to plot
-#' @param type Plot the variables, the samples, or both? 
-#' @param axes The axes to plot the samples along.
-#' @param ... Additional arguments (not used). 
-#' @return A ggplot object
-#' @importFrom ggplot2 ggplot geom_point aes_string
-#' @export
-plot.treeda <- function(x, type = c("both", "variables", "samples"), axes = c(1,2), ...) {
-    type = match.arg(type)
-    if(type %in% c("both", "variables")) {
-        
-    }
-    if(type %in% c("both", "samples")) {
-        df = data.frame(x$projections, class = x$input$response)
-        if(ncol(x$projections) == 1) {
-            psamples = ggplot(df) + geom_point(aes_string(y = "class", x = "Axis.1", color = "class"))
-        } else {
-            psamples = ggplot(df) +
-                geom_point(aes_string(x = paste("Axis", axes[1], sep = "."),
-                                      y = paste("Axis", axes[2], sep = "."),
-                                      color = "class"))
-        }
-    }
-    psamples
-}
-
-
 #' Predict using new data
 #'
-#' Given a fitted treeda model, get the predicted classes and
-#' projections onto the discriminating axes for new data.
+#' Given a fitted \code{\link{treeda}} model, get the predicted
+#' classes and projections onto the discriminating axes for new data.
 #'
-#' @param object Output from treeda function.
-#' @param newdata New data.
+#' @param object Output from \code{\link{treeda}} function.
+#' @param newdata New predictor matrix in the same format as the
+#'     \code{predictor} argument to treeda. A matrix of predictor
+#'     variables corresponding to the leaves of the tree and in the
+#'     same order as the leaves of the tree.
 #' @param newresponse New response vector, not required.
 #' @param check.consist Check the consistency between the tree and
 #'     predictor matrix?
-#' @param ... Additional arguments (not used). 
+#' @param ... Not used.
 #' @return A list containing the projections of the new data onto the
-#'     discriminating axes, the predicted classes, and the rss (if the
+#'     discriminating axes (\code{projections}), the predicted classes
+#'     (\code{classes}), and the rss (\code{rss}, only included if the
 #'     ground truth for the responses is available).
 #' @importFrom mvtnorm dmvnorm
-#' 
+#' @examples
+#' data(treeda_example)
+#' out.treeda = treeda(response = treeda_example$response,
+#'     predictors = treeda_example$predictors,
+#'     tree = treeda_example$tree,
+#'     p = 1)
+#' ## Here we are predicting on the training data, in general this
+#' ## would be done on a held out test set
+#' preds = predict(out.treeda, newdata = treeda_example$predictors,
+#'     newresponse = treeda_example$response)
+#' ## make a confusion matrix
+#' table(preds$classes, treeda_example$response)
 #' @export
 predict.treeda <- function(object, newdata, newresponse = NULL, check.consist = TRUE, ...) {
     if(check.consist) {
@@ -402,19 +416,35 @@ predict.treeda <- function(object, newdata, newresponse = NULL, check.consist = 
 }
 
 
-#' Get the coefficients from a treeda fit
-#' @param object An object of class treeda
+#' Coefficients from treeda fit
+#'
+#' Returns the coefficients from a treeda fit either in terms of the
+#' leaves only or in terms of the nodes and leaves.
+#' 
+#' @param object An object of class \code{treeda}.
 #' @param type Should the coefficients be in the leaf space or the
 #'     node space?
-#' @param ... Additional arguments. 
+#' @param ... Not used.
+#'
+#' @return A \code{\link[Matrix]{Matrix}} object containing the coefficients. 
+#' 
+#' @examples
+#' data(treeda_example)
+#' out.treeda = treeda(response = treeda_example$response,
+#'     predictors = treeda_example$predictors,
+#'     tree = treeda_example$tree,
+#'     p = 1)
+#' coef(out.treeda, type = "leaves")
+#' coef(out.treeda, type = "nodes")
+#' @importFrom Matrix Matrix
 #' @export
 coef.treeda <- function(object, type = c("leaves", "nodes"), ...) {
     type = match.arg(type)
     if(type == "leaves") {
         return(object$leafCoefficients$beta)
     }
-    n = length(object$tree$tip.label)
-    m = object$tree$Nnode
+    n = length(object$input$tree$tip.label)
+    m = object$input$tree$Nnode
     beta = Matrix::Matrix(data = 0, nrow = n+m, ncol = ncol(object$leafCoefficients$beta))
     beta[object$sda$varIndex,] = object$sda$beta
     return(beta)

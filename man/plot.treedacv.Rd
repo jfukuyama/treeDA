@@ -9,8 +9,16 @@
 \arguments{
 \item{x}{An object of class treedacv.}
 
-\item{...}{Additional arguments (not used).}
+\item{...}{Not used.}
 }
 \description{
-Gives a plot of the cross-validation error with standard error bars
+Plots the cross-validation error with standard error bars.
+}
+\examples{
+data(treeda_example)
+out.treedacv = treedacv(response = treeda_example$response,
+    predictors = treeda_example$predictors,
+    tree = treeda_example$tree,
+    pvec = 1:10)
+plot(out.treedacv)
 }

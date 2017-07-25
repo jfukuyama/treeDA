@@ -7,8 +7,8 @@
 combine_plot_and_tree(plot, tree.plot, tree.height = 5, print = TRUE)
 }
 \arguments{
-\item{plot}{A plot of data about the OTUs with the x axis
-corresponding to OTUs.}
+\item{plot}{A plot of data about the leaves with the x axis
+corresponding to leaves.}
 
 \item{tree.plot}{A plot of the tree.}
 
@@ -20,12 +20,12 @@ a graphics device, otherwise it will just return the gtable object
 without printing.}
 }
 \value{
-Returns a gtable object.
+Returns a \code{gtable} object.
 }
 \description{
-This method takes a ggplot of some data along the tips of the trees
+This method takes a ggplot of some data along the tips of the tree
 and a ggplot of a tree and combines them. It assumes that you are
 putting the tree on top and that the x axis for the plot has the
-OTUs in the correct position (this can be found using the function
-get_leaf_position).
+leaves in the correct position (this can be found using the
+function \code{\link{get_leaf_position}}).
 }
