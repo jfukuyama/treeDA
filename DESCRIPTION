@@ -24,6 +24,7 @@ Suggests:
 VignetteBuilder:
     knitr
 License: GPL-2
+biocViews:
 URL: https://github.com/jfukuyama/treeda
 Encoding: UTF-8
 LazyData: true
