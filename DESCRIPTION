@@ -20,7 +20,8 @@ Imports:
     stats (>= 3.4.1)
 Suggests:
     adaptiveGPCA (>= 0.1),
-    knitr (>= 1.16)
+    knitr (>= 1.16),
+    testthat (>= 2.0.0)
 VignetteBuilder:
     knitr
 License: GPL-2
