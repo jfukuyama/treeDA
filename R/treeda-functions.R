@@ -307,6 +307,20 @@ makeLeafCoefficients <- function(sda.out, descendantMatrix, means, sds) {
     return(list(beta = leafCoef, intercepts = intercepts))
 }
 
+#' Node coefficients to leaf coefficients
+#'
+#' General-purpose function for going from a coefficient vector on the
+#' nodes to a coefficient vector on the leaves.
+#'
+#' @param coef.vec A vector containing coefficients on internal nodes plus leaves.
+#' @param tree The phylogenetic tree.
+#' @return A vector containing coefficients on the leaves. 
+#' @export
+nodeToLeafCoefficients <- function(coef.vec, tree) {
+    descendantMatrix = makeDescendantMatrix(tree)
+    leafCoef = descendantMatrix %*% coef.vec
+    return(leafCoef)
+}
 
 #' Make descendant matrix
 #'
@@ -337,6 +351,24 @@ makeDescendantMatrix <- function(tree) {
     }
     fillA(n+1, n)
     return(A)
+}
+
+#' Make a matrix with predictors for each leaf and node
+#'
+#' Make a matrix with one predictor for each leaf and node in the
+#' tree, where the node predictors are the sum of the leaf predictors
+#' descending from them.
+#'
+#' @param leafPredictors A predictor matrix for the leaves: rows are
+#'     samples, columns are leaves.
+#' @param tree A phylogenetic tree describing the relationships
+#'     between the species/leaves.
+#' @return A predictor matrix for leaves and nodes together: rows are
+#'     samples, columns are leaf/node predictors.
+#' @export
+makeNodeAndLeafPredictors <- function(leafPredictors, tree) {
+    fullPredictors = as(leafPredictors, "matrix") %*% makeDescendantMatrix(tree)
+    return(fullPredictors)
 }
 
 #' Print a treeda object
