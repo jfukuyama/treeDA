@@ -7,7 +7,7 @@ Description: Performs sparse discriminant analysis on a combination of node
     and leaf predictors when the predictor variables are structured according
     to a tree.  
 Depends:
-    R (>= 3.4.1)
+    R (>= 3.4.0)
 Imports:
     sparseLDA (>= 0.1.9),
     Matrix (>= 1.2.10),
