@@ -17,7 +17,7 @@ Imports:
     grid (>= 3.4.1),
     phyloseq (>= 1.20.0),
     ggplot2 (>= 2.2.1),
-    stats (>= 3.4.1)
+    stats
 Suggests:
     adaptiveGPCA (>= 0.1),
     knitr (>= 1.16),
