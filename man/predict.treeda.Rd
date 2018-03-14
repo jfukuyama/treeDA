@@ -10,7 +10,10 @@
 \arguments{
 \item{object}{Output from \code{\link{treeda}} function.}
 
-\item{newdata}{New data.}
+\item{newdata}{New predictor matrix in the same format as the
+\code{predictor} argument to treeda. A matrix of predictor
+variables corresponding to the leaves of the tree and in the
+same order as the leaves of the tree.}
 
 \item{newresponse}{New response vector, not required.}
 

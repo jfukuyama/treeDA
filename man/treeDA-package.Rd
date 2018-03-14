@@ -33,6 +33,13 @@ cross-validation to determine the correct sparsity level, and
 functions to plot the resulting coefficient vectors along the tree
 (\code{\link{plot_coefficients}}).
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/jfukuyama/treeda}
+}
+
+}
 \author{
 \strong{Maintainer}: Julia Fukuyama \email{julia.fukuyama@gmail.com}
 

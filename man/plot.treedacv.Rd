@@ -7,7 +7,7 @@
 \method{plot}{treedacv}(x, ...)
 }
 \arguments{
-\item{x}{An object of class treedacv.}
+\item{x}{An object of class \code{treedacv}.}
 
 \item{...}{Not used.}
 }

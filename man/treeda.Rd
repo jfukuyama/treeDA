@@ -47,9 +47,10 @@ An object of class \code{treeda}. Contains the coefficients
     (\code{sda}).
 }
 \description{
-Performs sparse discriminant analysis on tree-structured data by
-augmenting the predictor matrix with additional predictors
-corresponding to the nodes.
+Performs tree-structured sparse discriminant analysis using an
+augmented predictor matrix with additional predictors corresponding
+to the nodes and then translating the parameters back in terms of
+only the leaves.
 }
 \examples{
 data(treeda_example)
