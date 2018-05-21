@@ -22,7 +22,8 @@ Imports:
 Suggests:
     adaptiveGPCA (>= 0.1),
     knitr (>= 1.16),
-    testthat (>= 2.0.0)
+    testthat (>= 2.0.0),
+    ape (>= 5.1)
 VignetteBuilder:
     knitr
 License: GPL-2
