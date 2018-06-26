@@ -1,6 +1,6 @@
 Package: treeDA
 Title: Tree-Based Discriminant Analysis
-Version: 0.0.3
+Version: 0.0.4
 Authors@R: person("Julia", "Fukuyama", email = "julia.fukuyama@gmail.com",
     role = c("aut", "cre"))
 Description: Performs sparse discriminant analysis on a combination of
