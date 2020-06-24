@@ -17,4 +17,3 @@ A gtable object with a bigger background.
 Expand the background of a gtable.
 }
 \keyword{internal}
-

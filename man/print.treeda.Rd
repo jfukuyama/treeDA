@@ -4,9 +4,8 @@
 \alias{print.treeda}
 \title{Print a treeda object}
 \usage{
-print.treeda(obj)
+\method{print}{treeda}(obj)
 }
 \description{
 Print a treeda object
 }
-

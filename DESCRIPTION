@@ -14,8 +14,9 @@ Imports:
     mvtnorm,
     reshape2,
     gtable,
-    grid
+    grid,
+    phyloseq
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 5.0.1
+RoxygenNote: 6.1.1

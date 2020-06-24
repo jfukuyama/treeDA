@@ -29,4 +29,3 @@ putting the tree on top and that the x axis for the plot has the
 OTUs in the correct position (this can be found using the function
 get_leaf_position).
 }
-

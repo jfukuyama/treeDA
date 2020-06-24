@@ -5,8 +5,8 @@
 \title{treeda cross validation}
 \usage{
 treedacv(response, predictors, tree, folds = 5, pvec = 1:tree$Nnode,
-  k = nclasses - 1, center = TRUE, scale = TRUE, class.names = NULL,
-  ...)
+  k = nclasses - 1, center = TRUE, scale = TRUE,
+  class.names = NULL, ...)
 }
 \arguments{
 \item{response}{The classes to be predicted.}
@@ -38,4 +38,3 @@ the mean and se of the loss for each value of p.
 \description{
 Performs cross-validation of a treeda fit.
 }
-

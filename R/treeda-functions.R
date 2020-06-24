@@ -283,12 +283,30 @@ makeDescendantMatrix <- function(tree) {
             for(c in children) {
                 fillA(c, n)
             }
-            A[,node] <<- Matrix::rowSums(A[,children])
+            A[,node] <<- Matrix::rowSums(A[,children,drop=FALSE])
         }
     }
     fillA(n+1, n)
     return(A)
 }
+
+#' Make branch length vector
+#'
+#' Gets the branch lengths of the tree, with order the same as the
+#' columns in makeDescendantMatrix.
+#'
+#' @param tree A tree object of class phylo
+#' @return A vector of length ntips + nnodes, with ith element giving
+#' the length of the branch above node i.
+#'
+#' @importFrom ape Ntip Nnode
+#' @keywords internal
+getBranchLengths <- function(tree) {
+    branch_lengths = numeric(Ntip(tree) + Nnode(tree))
+    branch_lengths[tree$edge[,2]] = tree$edge.length
+    return(branch_lengths)
+}
+
 
 #' Print a treeda object
 #' 

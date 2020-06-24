@@ -4,9 +4,8 @@
 \alias{print.treedacv}
 \title{Print treedacv object}
 \usage{
-print.treedacv(obj)
+\method{print}{treedacv}(obj)
 }
 \description{
 Print treedacv object
 }
-

@@ -9,4 +9,3 @@
 \description{
 Gives a plot of the cross-validation error with standard error bars
 }
-

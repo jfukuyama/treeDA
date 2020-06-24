@@ -5,7 +5,8 @@
 \title{Tree-based SDA}
 \usage{
 treeda(response, predictors, tree, p, k = nclasses - 1, center = TRUE,
-  scale = TRUE, class.names = NULL, check.consist = TRUE, A = NULL, ...)
+  scale = TRUE, class.names = NULL, check.consist = TRUE, A = NULL,
+  ...)
 }
 \arguments{
 \item{response}{A factor or character vector giving the class to be
@@ -28,4 +29,3 @@ Performs sparse discriminant analysis on tree-structured data by
 augmenting the predictor matrix with additional predictors
 corresponding to the nodes.
 }
-

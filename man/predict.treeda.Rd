@@ -21,4 +21,3 @@ ground truth for the responses is available).
 Given a fitted treeda model, get the predicted classes and
 projections onto the discriminating axes for new data.
 }
-

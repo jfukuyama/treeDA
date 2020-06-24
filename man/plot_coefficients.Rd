@@ -23,4 +23,3 @@ A plot of the tree and the coefficients.
 A function that will plot the tree as well as the coefficients
 selected for the discriminating axes.
 }
-

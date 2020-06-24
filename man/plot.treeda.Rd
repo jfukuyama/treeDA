@@ -21,4 +21,3 @@ A ggplot object
 Provides a plot of the projections of the samples onto the
 discriminating axes
 }
-

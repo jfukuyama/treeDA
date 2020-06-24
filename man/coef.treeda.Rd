@@ -9,4 +9,3 @@
 \description{
 Get the coefficients from a treeda fit
 }
-
