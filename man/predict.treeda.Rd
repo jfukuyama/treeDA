@@ -4,20 +4,44 @@
 \alias{predict.treeda}
 \title{Predict using new data}
 \usage{
-\method{predict}{treeda}(treeda, newdata, newresponse = NULL,
-  check.consist = TRUE)
+\method{predict}{treeda}(object, newdata, newresponse = NULL,
+  check.consist = TRUE, ...)
 }
 \arguments{
-\item{treeda}{Output from treeda function}
+\item{object}{Output from \code{\link{treeda}} function.}
 
-\item{newdata}{New data}
+\item{newdata}{New predictor matrix in the same format as the
+\code{predictor} argument to treeda. A matrix of predictor
+variables corresponding to the leaves of the tree and in the
+same order as the leaves of the tree.}
+
+\item{newresponse}{New response vector, not required.}
+
+\item{check.consist}{Check the consistency between the tree and
+predictor matrix?}
+
+\item{...}{Not used.}
 }
 \value{
 A list containing the projections of the new data onto the
-discriminating axes, the predicted classes, and the rss (if the
-ground truth for the responses is available).
+    discriminating axes (\code{projections}), the predicted classes
+    (\code{classes}), and the rss (\code{rss}, only included if the
+    ground truth for the responses is available).
 }
 \description{
-Given a fitted treeda model, get the predicted classes and
-projections onto the discriminating axes for new data.
+Given a fitted \code{\link{treeda}} model, get the predicted
+classes and projections onto the discriminating axes for new data.
+}
+\examples{
+data(treeda_example)
+out.treeda = treeda(response = treeda_example$response,
+    predictors = treeda_example$predictors,
+    tree = treeda_example$tree,
+    p = 1)
+## Here we are predicting on the training data, in general this
+## would be done on a held out test set
+preds = predict(out.treeda, newdata = treeda_example$predictors,
+    newresponse = treeda_example$response)
+## make a confusion matrix
+table(preds$classes, treeda_example$response)
 }

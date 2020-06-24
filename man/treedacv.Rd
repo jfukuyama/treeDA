@@ -14,7 +14,7 @@ treedacv(response, predictors, tree, folds = 5, pvec = 1:tree$Nnode,
 \item{predictors}{A matrix of predictors corresponding to the tips
 of the tree.}
 
-\item{tree}{A tree object of class phylo.}
+\item{tree}{A tree object of class \code{phylo}.}
 
 \item{folds}{Either a single number corresponding to the number of
 folds of cross-validation to perform or a vector of integers
@@ -28,13 +28,26 @@ of the dataset.}
 \item{center}{Center the predictors?}
 
 \item{scale}{Scale the predictors?}
+
+\item{class.names}{A vector giving the names of the classes.}
+
+\item{...}{Additional arguments to be passed to \code{\link{treeda}}.}
 }
 \value{
-A list with the value of p with minimum cv error, the
-minimum value of p with in 1 e of the minimum cv error, a matrix
-with the loss for each fold and each value of p, and vectors with
-the mean and se of the loss for each value of p.
+A list with the value of p with minimum cv error
+    (\code{p.min}), the minimum value of p with in 1 se of the
+    minimum cv error (\code{p.1se}), and a data frame containing
+    the loss for each fold, mean loss, and standard error of the
+    loss for each value of p (\code{loss.df}).
 }
 \description{
-Performs cross-validation of a treeda fit.
+Performs cross-validation of a \code{\link{treeda}} fit.
+}
+\examples{
+data(treeda_example)
+out.treedacv = treedacv(response = treeda_example$response,
+    predictors = treeda_example$predictors,
+    tree = treeda_example$tree,
+    pvec = 1:10)
+out.treedacv
 }

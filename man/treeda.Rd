@@ -2,7 +2,7 @@
 % Please edit documentation in R/treeda-functions.R
 \name{treeda}
 \alias{treeda}
-\title{Tree-based SDA}
+\title{Tree-based sparse discriminant analysis}
 \usage{
 treeda(response, predictors, tree, p, k = nclasses - 1, center = TRUE,
   scale = TRUE, class.names = NULL, check.consist = TRUE, A = NULL,
@@ -13,19 +13,51 @@ treeda(response, predictors, tree, p, k = nclasses - 1, center = TRUE,
 predicted.}
 
 \item{predictors}{A matrix of predictor variables corresponding to
-the leaves of the tree and in the same order as the leaves of the
-tree.}
+the leaves of the tree and in the same order as the leaves of
+the tree.}
 
-\item{tree}{A tree of class phylo.}
+\item{tree}{A tree of class \code{phylo}.}
 
 \item{p}{The number of predictors to use.}
 
 \item{k}{The number of components to use.}
 
+\item{center}{Center the predictor variables?}
+
+\item{scale}{Scale the predictor variables?}
+
+\item{class.names}{Optional argument giving the class names.}
+
+\item{check.consist}{Check consistency of the predictor matrix and
+the tree.}
+
+\item{A}{A matrix describing the tree structure. If it has been
+computed before it can be passed in here and will not be
+recomputed.}
+
 \item{...}{Additional arguments to be passed to sda}
 }
+\value{
+An object of class \code{treeda}. Contains the coefficients
+    in the original predictor space (\code{leafCoefficients}), the
+    number of predictors used in the node + leaf space
+    (\code{nPredictors}), number of leaf predictors used
+    (\code{nLeafPredictors}), the projections of the samples onto
+    the discriminating axes (\code{projections}), and the sparse
+    discriminant analysis object that was used in the fit
+    (\code{sda}).
+}
 \description{
-Performs sparse discriminant analysis on tree-structured data by
-augmenting the predictor matrix with additional predictors
-corresponding to the nodes.
+Performs tree-structured sparse discriminant analysis using an
+augmented predictor matrix with additional predictors corresponding
+to the nodes and then translating the parameters back in terms of
+only the leaves.
+}
+\examples{
+data(treeda_example)
+out.treeda = treeda(response = treeda_example$response,
+    predictors = treeda_example$predictors,
+    tree = treeda_example$tree,
+    p = 1)
+out.treeda
 }

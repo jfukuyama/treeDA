@@ -4,7 +4,12 @@
 \alias{print.treeda}
 \title{Print a treeda object}
 \usage{
-\method{print}{treeda}(obj)
+\method{print}{treeda}(x, ...)
+}
+\arguments{
+\item{x}{\code{treeda} object.}
+
+\item{...}{Not used.}
 }
 \description{
 Print a treeda object

@@ -24,21 +24,21 @@ expand_background = function(gtable) {
 
 #' Method for combining two ggplots
 #'
-#' This method takes a ggplot of some data along the tips of the trees
+#' This method takes a ggplot of some data along the tips of the tree
 #' and a ggplot of a tree and combines them. It assumes that you are
 #' putting the tree on top and that the x axis for the plot has the
-#' OTUs in the correct position (this can be found using the function
-#' get_leaf_position).
+#' leaves in the correct position (this can be found using the
+#' function \code{\link{get_leaf_position}}).
 #'
-#' @param plot A plot of data about the OTUs with the x axis
-#' corresponding to OTUs.
+#' @param plot A plot of data about the leaves with the x axis
+#' corresponding to leaves.
 #' @param tree.plot A plot of the tree.
 #' @param tree.height The relative amount of space in the plot the tree
 #' should take up.
 #' @param print If true, the function will print the combined plot to
 #' a graphics device, otherwise it will just return the gtable object
 #' without printing.
-#' @return Returns a gtable object. 
+#' @return Returns a \code{gtable} object. 
 #'
 #' @importFrom ggplot2 ggplotGrob
 #' @importFrom gtable gtable_add_rows
@@ -75,7 +75,7 @@ combine_plot_and_tree = function(plot, tree.plot, tree.height = 5, print = TRUE)
             stop ("The data plot has too many data panels, don't know how to combine it with the tree plot.")
     }
     ## strip the white space on top here
-    gtable.bigger = gtable_add_rows(plot.grob, height = unit(tree.height, "null"), pos = 0)
+    gtable.bigger = gtable_add_rows(plot.grob, heights = unit(tree.height, "null"), pos = 0)
     gtable.bigger.tree = gtable_add_grob(gtable.bigger, tree.panel.grob,
         t = 1, l = plot.panel.column, r = plot.panel.column)
     if(length(plot.guide.idx) == 0 & length(tree.guide.idx) == 1) {
@@ -83,7 +83,7 @@ combine_plot_and_tree = function(plot, tree.plot, tree.height = 5, print = TRUE)
         ## default position for gtable_add_columns is on the right,
         ## which is where we want it
         gtable.bigger.tree = gtable_add_cols(gtable.bigger.tree,
-            width = tree.grob$widths[tree.guide.column])
+            widths = tree.grob$widths[tree.guide.column])
         gtable.bigger.tree = gtable_add_grob(gtable.bigger.tree, tree.guide.grob,
             t = 1, l = dim(gtable.bigger.tree)[2], r = dim(gtable.bigger.tree)[2])
     } else if(length(plot.guide.idx) == 1 & length(tree.guide.idx) == 1) {
@@ -93,9 +93,9 @@ combine_plot_and_tree = function(plot, tree.plot, tree.height = 5, print = TRUE)
     ## add some padding around the top and right (right only if we
     ## needed to add an extra column for the tree guide)
     gtable.bigger.tree = gtable_add_rows(gtable.bigger.tree,
-        height = plot.grob$heights[dim(plot.grob[1])], pos = 0)
+        heights = plot.grob$heights[dim(plot.grob[1])], pos = 0)
     if(length(plot.guide.idx) == 0 & length(tree.guide.idx) == 1)
-        gtable.bigger.tree = gtable_add_cols(gtable.bigger.tree, width = plot.grob$widths[1])
+        gtable.bigger.tree = gtable_add_cols(gtable.bigger.tree, widths = plot.grob$widths[1])
     gtable.bigger.tree = expand_background(gtable.bigger.tree)
     if(print) {
         plot(gtable.bigger.tree)
@@ -107,16 +107,15 @@ combine_plot_and_tree = function(plot, tree.plot, tree.height = 5, print = TRUE)
 
 #' Get leaf positions from a tree layout
 #'
-#' Takes a tree, returns a vector with names describing the OTU and
-#' entries giving the position of that OTU in the tree layout.
+#' Takes a tree, returns a vector with names describing the leaves and
+#' entries giving the position of that leaf in the tree layout.
 #'
-#' @param tree A phylogenetic tree
+#' @param tree A tree of class \code{phylo}. 
 #' @param ladderize FALSE for a non-ladderzied layout, TRUE or "right"
 #' for a ladderized layout, "left" for a layout ladderized the other
 #' way.
 #' @importFrom phyloseq tree_layout
 #' @export
-
 get_leaf_position = function(tree, ladderize) {
     tree.layout = tree_layout(tree, ladderize = ladderize)
     dt = tree.layout$edgeDT
@@ -127,18 +126,33 @@ get_leaf_position = function(tree, ladderize) {
 }
 
 
-#' Plot the discriminating vectors from treeda
+#' Plot the discriminating axes from treeda
 #'
-#' A function that will plot the tree as well as the coefficients
-#' selected for the discriminating axes.
+#' Plots the leaf coefficients for the discriminating axes in a fitted
+#' \code{treeda} model aligned under the tree. 
 #'
-#' @param out.treeda The object resulting from a call to treeda.
-#' @param remove.bl A logical, TRUE if the tree should be plotted
-#'     after setting all branch lengths equal to the same value (tends
-#'     to make trees that look nicer) or not.
-#' @param ladderize Layout parameter for the tree. 
+#' @param out.treeda The object resulting from a call to
+#'     \code{\link{treeda}}.
+#' @param remove.bl A logical, \code{TRUE} if the tree should be plotted
+#'     after setting all branch lengths equal to the same value or
+#'     not. The plots tend to look nicer when all the branch lengths
+#'     are the same, and the branch length information is not used in
+#'     the model.
+#' @param ladderize Layout parameter for the tree.
+#' @param tree.height The height of the tree relative to the height of
+#'     the plot below.
 #' @return A plot of the tree and the coefficients.
 #' @importFrom grid grid.draw
+#' @importFrom phyloseq plot_tree
+#' @importFrom ggplot2 coord_flip scale_x_reverse facet_grid
+#'     element_blank aes_string ylab theme
+#' @examples
+#' data(treeda_example)
+#' out.treeda = treeda(response = treeda_example$response,
+#'     predictors = treeda_example$predictors,
+#'     tree = treeda_example$tree,
+#'     p = 1)
+#' plot_coefficients(out.treeda)
 #' @export
 plot_coefficients <- function(out.treeda, remove.bl = TRUE, ladderize = TRUE, tree.height = 2) {
     tr = out.treeda$input$tree
@@ -152,7 +166,7 @@ plot_coefficients <- function(out.treeda, remove.bl = TRUE, ladderize = TRUE, tr
     df = data.frame(coef, leaf.position)
     df = reshape2::melt(df, id.vars = "leaf.position")
     coef.plot = ggplot(df) +
-        geom_point(aes(x = leaf.position, y = value)) +
+        geom_point(aes_string(x = "leaf.position", y = "value")) +
         facet_grid(variable ~ .) +
         ylab("Coefficient value") + 
         theme(axis.text.x = element_blank(),
@@ -160,7 +174,7 @@ plot_coefficients <- function(out.treeda, remove.bl = TRUE, ladderize = TRUE, tr
               axis.title.x = element_blank(),
               panel.grid.major.x = element_blank(),
               panel.grid.minor.x = element_blank())
-    p = combine_plot_and_tree(coef.plot, tree.plot, tree.height = tree.height)
+    p = combine_plot_and_tree(coef.plot, tree.plot, tree.height = tree.height, print = FALSE)
     grid::grid.draw(p)
     invisible(p)
 }

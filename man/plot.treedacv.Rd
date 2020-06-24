@@ -4,8 +4,21 @@
 \alias{plot.treedacv}
 \title{Plot a treedacv object}
 \usage{
-\method{plot}{treedacv}(obj)
+\method{plot}{treedacv}(x, ...)
+}
+\arguments{
+\item{x}{An object of class \code{treedacv}.}
+
+\item{...}{Not used.}
 }
 \description{
-Gives a plot of the cross-validation error with standard error bars
+Plots the cross-validation error with standard error bars.
+}
+\examples{
+data(treeda_example)
+out.treedacv = treedacv(response = treeda_example$response,
+    predictors = treeda_example$predictors,
+    tree = treeda_example$tree,
+    pvec = 1:10)
+plot(out.treedacv)
 }

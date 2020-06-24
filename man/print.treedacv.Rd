@@ -2,10 +2,15 @@
 % Please edit documentation in R/treeda-functions.R
 \name{print.treedacv}
 \alias{print.treedacv}
-\title{Print treedacv object}
+\title{Print treedacv objects}
 \usage{
-\method{print}{treedacv}(obj)
+\method{print}{treedacv}(x, ...)
+}
+\arguments{
+\item{x}{\code{treedacv} object.}
+
+\item{...}{Not used}
 }
 \description{
-Print treedacv object
+Print treedacv objects
 }

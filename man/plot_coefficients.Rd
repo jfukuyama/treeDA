@@ -2,24 +2,38 @@
 % Please edit documentation in R/plotting-functions.R
 \name{plot_coefficients}
 \alias{plot_coefficients}
-\title{Plot the discriminating vectors from treeda}
+\title{Plot the discriminating axes from treeda}
 \usage{
 plot_coefficients(out.treeda, remove.bl = TRUE, ladderize = TRUE,
   tree.height = 2)
 }
 \arguments{
-\item{out.treeda}{The object resulting from a call to treeda.}
+\item{out.treeda}{The object resulting from a call to
+\code{\link{treeda}}.}
 
-\item{remove.bl}{A logical, TRUE if the tree should be plotted
-after setting all branch lengths equal to the same value (tends
-to make trees that look nicer) or not.}
+\item{remove.bl}{A logical, \code{TRUE} if the tree should be plotted
+after setting all branch lengths equal to the same value or
+not. The plots tend to look nicer when all the branch lengths
+are the same, and the branch length information is not used in
+the model.}
 
 \item{ladderize}{Layout parameter for the tree.}
+
+\item{tree.height}{The height of the tree relative to the height of
+the plot below.}
 }
 \value{
 A plot of the tree and the coefficients.
 }
 \description{
-A function that will plot the tree as well as the coefficients
-selected for the discriminating axes.
+Plots the leaf coefficients for the discriminating axes in a fitted
+\code{treeda} model aligned under the tree.
+}
+\examples{
+data(treeda_example)
+out.treeda = treeda(response = treeda_example$response,
+    predictors = treeda_example$predictors,
+    tree = treeda_example$tree,
+    p = 1)
+plot_coefficients(out.treeda)
 }

@@ -1,0 +1,4 @@
+^cran-comments\.md$ # Comments for CRAN submission
+^\.Rhistory$
+^readme\.md$
+^\.travis\.yml$

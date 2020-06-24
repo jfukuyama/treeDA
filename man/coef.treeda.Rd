@@ -2,10 +2,31 @@
 % Please edit documentation in R/treeda-functions.R
 \name{coef.treeda}
 \alias{coef.treeda}
-\title{Get the coefficients from a treeda fit}
+\title{Coefficients from treeda fit}
 \usage{
-\method{coef}{treeda}(obj, type = c("leaves", "nodes"))
+\method{coef}{treeda}(object, type = c("leaves", "nodes"), ...)
+}
+\arguments{
+\item{object}{An object of class \code{treeda}.}
+
+\item{type}{Should the coefficients be in the leaf space or the
+node space?}
+
+\item{...}{Not used.}
+}
+\value{
+A \code{\link[Matrix]{Matrix}} object containing the coefficients.
 }
 \description{
-Get the coefficients from a treeda fit
+Returns the coefficients from a treeda fit either in terms of the
+leaves only or in terms of the nodes and leaves.
+}
+\examples{
+data(treeda_example)
+out.treeda = treeda(response = treeda_example$response,
+    predictors = treeda_example$predictors,
+    tree = treeda_example$tree,
+    p = 1)
+coef(out.treeda, type = "leaves")
+coef(out.treeda, type = "nodes")
 }
