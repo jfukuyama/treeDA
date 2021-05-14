@@ -1,6 +1,6 @@
 Package: treeDA
 Title: Tree-Based Discriminant Analysis
-Version: 0.0.4
+Version: 0.0.5
 Authors@R: person("Julia", "Fukuyama", email = "julia.fukuyama@gmail.com",
     role = c("aut", "cre"))
 Description: Performs sparse discriminant analysis on a combination of
@@ -17,13 +17,14 @@ Imports:
     gtable (>= 0.2.0),
     phyloseq (>= 1.22.3),
     ggplot2 (>= 2.2.1),
+    ape (>= 5.1),
     grid,
     stats
 Suggests:
     adaptiveGPCA (>= 0.1),
     knitr (>= 1.16),
     testthat (>= 2.0.0),
-    ape (>= 5.1)
+    markdown
 VignetteBuilder:
     knitr
 License: GPL-2
@@ -31,4 +32,4 @@ biocViews:
 URL: https://github.com/jfukuyama/treeda
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0

@@ -4,9 +4,19 @@
 \alias{treeda}
 \title{Tree-based sparse discriminant analysis}
 \usage{
-treeda(response, predictors, tree, p, k = nclasses - 1, center = TRUE,
-  scale = TRUE, class.names = NULL, check.consist = TRUE, A = NULL,
-  ...)
+treeda(
+  response,
+  predictors,
+  tree,
+  p,
+  k = nclasses - 1,
+  center = TRUE,
+  scale = TRUE,
+  class.names = NULL,
+  check.consist = TRUE,
+  A = NULL,
+  ...
+)
 }
 \arguments{
 \item{response}{A factor or character vector giving the class to be

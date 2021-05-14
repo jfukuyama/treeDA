@@ -4,8 +4,7 @@
 \alias{predict.treeda}
 \title{Predict using new data}
 \usage{
-\method{predict}{treeda}(object, newdata, newresponse = NULL,
-  check.consist = TRUE, ...)
+\method{predict}{treeda}(object, newdata, newresponse = NULL, check.consist = TRUE, ...)
 }
 \arguments{
 \item{object}{Output from \code{\link{treeda}} function.}

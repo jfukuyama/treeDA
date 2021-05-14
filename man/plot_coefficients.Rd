@@ -4,8 +4,12 @@
 \alias{plot_coefficients}
 \title{Plot the discriminating axes from treeda}
 \usage{
-plot_coefficients(out.treeda, remove.bl = TRUE, ladderize = TRUE,
-  tree.height = 2)
+plot_coefficients(
+  out.treeda,
+  remove.bl = TRUE,
+  ladderize = TRUE,
+  tree.height = 2
+)
 }
 \arguments{
 \item{out.treeda}{The object resulting from a call to

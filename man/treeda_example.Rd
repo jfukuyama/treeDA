@@ -3,9 +3,11 @@
 \name{treeda_example}
 \alias{treeda_example}
 \title{Example dataset}
-\format{A list containing response variables, predictor variables,
+\format{
+A list containing response variables, predictor variables,
     and a tree describing the relationship between the predictor
-    variables.}
+    variables.
+}
 \description{
 A small example dataset with three components, stored as a list
 with a vector containing the classes (\code{response}), a matrix
